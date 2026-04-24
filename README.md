@@ -1,19 +1,23 @@
-# Prueba Técnica Mobile - TodoApp (Ionic + Angular + Cordova)
+# TodoApp - Implementación realizada (Ionic + Angular + Cordova)
 
-Aplicación híbrida de gestión de tareas desarrollada para evaluar competencias en desarrollo mobile con Ionic: CRUD de tareas, categorización completa, feature flags con Firebase Remote Config, optimización de rendimiento y empaquetado para Android/iOS.
+Este documento describe lo que implementé en la aplicación durante la prueba técnica, con foco en funcionalidades reales del código, decisiones técnicas y cómo ejecutar/validar la solución.
 
-## 1) Objetivo y alcance
+## 1) Lo que implementé
 
-La aplicación permite:
+Funcionalidad de tareas:
 
 - Agregar nuevas tareas.
 - Marcar tareas como completadas.
 - Eliminar tareas.
-- Crear, editar y eliminar categorías.
+- Crear, renombrar y eliminar categorías.
 - Asignar una categoría a cada tarea.
 - Filtrar tareas por categoría.
 
-Persistencia local implementada con Ionic Storage para conservar estado entre sesiones.
+Persistencia local:
+
+- Guardado de tareas y categorías con Ionic Storage.
+- Carga inicial desde storage al arrancar la app.
+- Normalización para datos legacy (sin romper estructura previa).
 
 ## 2) Stack tecnológico
 
@@ -30,16 +34,16 @@ Requisitos de entorno:
 - Android Studio + SDK + emulador/dispositivo Android
 - macOS + Xcode completo para iOS
 
-## 3) Matriz de cumplimiento de requerimientos
+## 3) Evidencia en código de lo implementado
 
-| Requerimiento | Implementación | Evidencia |
-|---|---|---|
-| Versionamiento en Git | Proyecto versionado y preparado para repositorio público | `git`, estructura del repo, historial de commits |
-| Estructura híbrida Android/iOS con Cordova | Scripts de build/run para ambas plataformas | `package.json` (`build:cordova:*`, `cordova:run:*`, `cordova:serve:*`) |
-| Firebase + Remote Config (feature flag) | Flag `feature_todo_categories` para activar/desactivar categorías en UI | `src/app/services/feature-flags.service.ts`, `src/environments/environment*.ts` |
-| Categorización de tareas | CRUD de categorías + asignación + filtrado | `src/app/services/todo.service.ts`, `src/app/categories/*`, `src/app/home/*` |
-| Optimización de rendimiento | Signals/computed, OnPush, lazy load, track por id | `src/app/home/home.page.ts`, `src/app/app-routing.module.ts`, templates |
-| Exportación APK/IPA | Flujo documentado para generar artefactos release | Secciones de build en este README |
+| Tema implementado | Evidencia |
+|---|---|
+| Estado de tareas/categorías y persistencia | `src/app/services/todo.service.ts` |
+| CRUD de categorías (crear, renombrar, eliminar) | `src/app/services/todo.service.ts`, `src/app/categories/categories.page.ts`, `src/app/categories/categories.page.html` |
+| Asignación y filtro por categoría | `src/app/home/home.page.ts`, `src/app/home/home.page.html` |
+| Feature flag de categorías | `src/app/services/feature-flags.service.ts` |
+| Configuración Firebase/Remote Config | `src/environments/environment.ts`, `src/environments/environment.prod.ts` |
+| Estructura híbrida con Cordova | `package.json`, `config.xml` |
 
 ## 4) Arquitectura funcional
 
@@ -61,7 +65,7 @@ Requisitos de entorno:
 - Pantalla de categorías: alta, renombrado y eliminación.
 - Navegación lazy-loaded con Angular Router.
 
-## 5) Configuración de Firebase y Remote Config
+## 5) Firebase y Remote Config (lo que integré)
 
 1. Crear proyecto en [Firebase Console](https://console.firebase.google.com/).
 2. Registrar una app Web y copiar credenciales en:
@@ -70,16 +74,16 @@ Requisitos de entorno:
 3. (Opcional recomendado para repos públicos) partir de:
    - `src/environments/environment.example.ts`
    - `src/environments/environment.prod.example.ts`
-4. Crear en Remote Config el parámetro:
+4. Configuré en Remote Config el parámetro:
 
 | Parámetro | Tipo | Valores |
 |---|---|---|
 | `feature_todo_categories` | string | `true`/`1` habilita, `false`/`0` deshabilita |
 
-Comportamiento:
+Comportamiento implementado:
 
-- Habilitado: UI permite gestionar y filtrar categorías.
-- Deshabilitado: UI de categorías se oculta y las tareas usan categoría base.
+- Habilitado (`true`/`1`): se muestra gestión de categorías y filtro.
+- Deshabilitado (`false`/`0`): se ocultan esas opciones y se usa categoría base.
 
 ## 6) Instalación y ejecución
 
@@ -125,19 +129,19 @@ npm run cordova:serve:android
 npm run cordova:serve:ios
 ```
 
-## 7) Exportación de artefactos (APK / IPA)
+## 7) Build móvil y artefactos
 
-### Android
+### Android (flujo implementado)
 
 ```bash
 npm run build:prod
 npx cordova build android --release
 ```
 
-- El artefacto se genera en `platforms/android/app/build/outputs/...`.
-- Firmar con keystore de distribución antes de publicar/entregar.
+- El artefacto release se genera en `platforms/android/app/build/outputs/...`.
+- La firma final depende del keystore de distribución del evaluador/entorno.
 
-### iOS
+### iOS (flujo implementado)
 
 ```bash
 npm run build:prod
@@ -145,9 +149,9 @@ npx cordova build ios --release
 ```
 
 - Abrir `platforms/ios/*.xcworkspace` en Xcode.
-- Ir a `Product -> Archive` y exportar IPA con cuenta/certificados válidos.
+- Ejecutar `Product -> Archive` para generar el archivo de distribución.
 
-Nota de entrega: con `Personal Team` se puede compilar y probar en dispositivo físico, pero la exportación de IPA distribuible requiere Apple Developer Program activo.
+Nota real de esta implementación: con `Personal Team` se puede compilar y probar en iPhone físico, pero exportar IPA distribuible requiere membresía activa en Apple Developer Program.
 
 ## 8) Optimización de rendimiento aplicada
 
@@ -157,15 +161,15 @@ Nota de entrega: con `Personal Team` se puede compilar y probar en dispositivo f
 - Iteración de listas con tracking por `id` para minimizar re-renderizados.
 - Carga remota de flags en arranque con fallback local para resiliencia.
 
-## 9) Calidad, mantenibilidad y escalabilidad
+## 9) Calidad, mantenibilidad y escalabilidad aplicadas
 
 - Servicios separados por responsabilidad (`TodoService`, `FeatureFlagsService`).
 - Modelos tipados para tareas y categorías.
 - Reglas de validación de categorías (normalización y unicidad).
 - Manejo de estados vacíos y datos legacy para robustez.
-- Scripts estandarizados para build/test/lint en `package.json`.
+- Scripts estandarizados para build/test/lint definidos en `package.json`.
 
-## 10) Respuestas técnicas solicitadas
+## 10) Respuestas sobre mi implementación
 
 ### 10.1 ¿Cuáles fueron los principales desafíos?
 
@@ -187,22 +191,12 @@ Nota de entrega: con `Personal Team` se puede compilar y probar en dispositivo f
 - Scripts de `test` y `lint` para control de calidad automatizable.
 - README operativo y trazable para reproducibilidad técnica.
 
-## 11) Evidencias y entregables
+## 11) Evidencias que recomiendo adjuntar
 
-Checklist recomendado para la entrega final:
-
-- [ ] Repositorio público (GitHub/GitLab) con rama de trabajo y commits claros.
-- [ ] README técnico (este documento) actualizado.
-- [ ] Capturas o video de funcionalidades (CRUD tareas, categorías, filtro, flag on/off).
-- [ ] APK generado y enlace de descarga.
-- [ ] IPA generado o evidencia de build/archive con limitaciones justificadas.
-- [ ] Respuestas técnicas incluidas (desafíos, optimización, calidad).
-
-Sugerencia de estructura para evidencias:
-
-- `docs/capturas/`
-- `docs/video/`
-- `docs/builds/`
+- Capturas o video mostrando: creación de tarea, completado, eliminación, categorías y filtro.
+- Evidencia de `feature_todo_categories` en estado ON y OFF.
+- Evidencia de build Android release.
+- Evidencia de build/archive iOS con aclaración de limitación de cuenta si aplica.
 
 ## 12) Comandos de verificación rápida
 
@@ -223,9 +217,10 @@ npm run build
 | `src/environments/` | Configuración de Firebase y defaults de flags |
 | `config.xml` | Configuración Cordova de la app |
 
-## 14) Instrucciones de entrega
+## 14) Entrega
 
-1. Realizar fork del repositorio base.
-2. Implementar cambios en una rama dedicada.
-3. Publicar rama y compartir enlace del repositorio.
-4. Adjuntar enlaces de descarga de APK/IPA (o evidencia técnica equivalente para iOS).
+Este desarrollo se realizó directamente sobre este repositorio (sin fork), manteniendo versionamiento con commits de avance por funcionalidad.
+
+1. Publicar este repositorio con el código actualizado.
+2. Adjuntar evidencias funcionales (capturas/video).
+3. Compartir artefactos móviles generados (o evidencia de archive en iOS si hay restricción de cuenta).
