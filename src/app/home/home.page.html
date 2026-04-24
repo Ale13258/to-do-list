@@ -23,6 +23,14 @@
         </ion-button>
       </div>
 
+      <div class="progress-shell">
+        <div class="progress-head">
+          <span>Progreso del día</span>
+          <strong>{{ todo.completionRate() }}%</strong>
+        </div>
+        <ion-progress-bar [value]="todo.completionRate() / 100" />
+      </div>
+
       @if (flags.categoriesEnabled()) {
         <div class="filter-card">
           <ion-item lines="none" class="filter-row">
@@ -140,7 +148,10 @@
     }
 
     @if (todo.filteredTodos().length === 0) {
-      <p class="empty-hint">No hay tareas para este filtro.</p>
+      <div class="empty-state">
+        <ion-icon name="sparkles-outline" />
+        <p class="empty-hint">No hay tareas para este filtro.</p>
+      </div>
     }
   }
 
