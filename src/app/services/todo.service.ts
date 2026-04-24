@@ -135,6 +135,31 @@ export class TodoService {
     await this.persist();
   }
 
+  async restoreTodo(todo: Todo, index?: number): Promise<void> {
+    if (!todo || typeof todo.id !== 'string' || !todo.id.trim()) {
+      return;
+    }
+
+    const safeTodo: Todo = {
+      id: todo.id.trim(),
+      title: todo.title?.trim() || 'Tarea recuperada',
+      completed: Boolean(todo.completed),
+      categoryId: this.resolveCategoryId(todo.categoryId),
+    };
+
+    this.list.update((items) => {
+      if (items.some((item) => item.id === safeTodo.id)) {
+        return items;
+      }
+      if (index === undefined || index < 0 || index > items.length) {
+        return [...items, safeTodo];
+      }
+      return [...items.slice(0, index), safeTodo, ...items.slice(index)];
+    });
+
+    await this.persist();
+  }
+
   async updateTodoCategory(id: string, categoryId: string): Promise<void> {
     const nextCategoryId = this.resolveCategoryId(categoryId);
     this.list.update((items) =>

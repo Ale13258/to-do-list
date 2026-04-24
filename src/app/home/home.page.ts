@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewChild, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { IonModal } from '@ionic/angular';
+import { AlertController, IonModal, ToastController } from '@ionic/angular';
 import { DEFAULT_CATEGORY_ID, Todo } from '../models/todo.model';
 import { FeatureFlagsService } from '../services/feature-flags.service';
 import { TodoService } from '../services/todo.service';
@@ -16,6 +16,8 @@ export class HomePage implements OnInit {
   protected readonly todo = inject(TodoService);
   protected readonly flags = inject(FeatureFlagsService);
   private readonly router = inject(Router);
+  private readonly alertController = inject(AlertController);
+  private readonly toastController = inject(ToastController);
   @ViewChild(IonModal) private createTaskModal?: IonModal;
   protected readonly categorySelectOptions = { cssClass: 'todo-select-popover' };
 
@@ -66,7 +68,17 @@ export class HomePage implements OnInit {
   }
 
   protected async onRemove(todo: Todo): Promise<void> {
+    const confirmed = await this.confirmDelete(todo.title);
+    if (!confirmed) {
+      return;
+    }
+
+    const currentItems = this.todo.todos();
+    const removedIndex = currentItems.findIndex((item) => item.id === todo.id);
+    const removedSnapshot: Todo = { ...todo };
+
     await this.todo.removeTodo(todo.id);
+    await this.showUndoDeleteToast(removedSnapshot, removedIndex);
   }
 
   protected async onTodoCategoryChange(
@@ -101,5 +113,38 @@ export class HomePage implements OnInit {
 
   protected trackById(_index: number, item: Todo): string {
     return item.id;
+  }
+
+  private async confirmDelete(title: string): Promise<boolean> {
+    const alert = await this.alertController.create({
+      header: 'Eliminar tarea',
+      message: `¿Seguro que quieres eliminar "${title}"?`,
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        { text: 'Eliminar', role: 'destructive' },
+      ],
+    });
+
+    await alert.present();
+    const result = await alert.onDidDismiss();
+    return result.role === 'destructive';
+  }
+
+  private async showUndoDeleteToast(todo: Todo, index: number): Promise<void> {
+    const toast = await this.toastController.create({
+      message: 'Tarea eliminada',
+      duration: 5000,
+      position: 'bottom',
+      buttons: [
+        {
+          text: 'Deshacer',
+          role: 'cancel',
+          handler: () => {
+            void this.todo.restoreTodo(todo, index);
+          },
+        },
+      ],
+    });
+    await toast.present();
   }
 }

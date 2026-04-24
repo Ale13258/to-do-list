@@ -55,6 +55,20 @@
   font-size: 0.95rem;
 }
 
+.empty-state {
+  display: grid;
+  place-items: center;
+  gap: 0.45rem;
+  margin: 1.1rem 0 1.3rem;
+  animation: fadeUp 320ms ease;
+}
+
+.empty-state ion-icon {
+  font-size: 1.5rem;
+  color: #3a6fea;
+  animation: pulseGlow 1.9s ease-in-out infinite;
+}
+
 .tasks-grid {
   display: grid;
   gap: 0.7rem;
@@ -68,6 +82,17 @@
   display: grid;
   gap: 0.7rem;
   box-shadow: 0 8px 20px rgba(36, 87, 112, 0.12);
+  animation: fadeUp 360ms ease both;
+  transition:
+    transform 220ms ease,
+    box-shadow 220ms ease,
+    border-color 220ms ease;
+}
+
+.task-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 26px rgba(36, 87, 112, 0.18);
+  border-color: rgba(59, 111, 241, 0.24);
 }
 
 .task-top {
@@ -90,6 +115,7 @@
 .task-card.completed .task-main h3 {
   text-decoration: line-through;
   color: var(--ion-color-medium);
+  transition: color 180ms ease;
 }
 
 .meta-badge {
@@ -99,6 +125,11 @@
 
 .remove-btn {
   margin: -0.25rem -0.3rem 0 0;
+  transition: transform 160ms ease;
+}
+
+.remove-btn:hover {
+  transform: scale(1.08);
 }
 
 .task-category-select {
@@ -121,6 +152,7 @@
   padding: 0.9rem;
   margin-bottom: 1rem;
   backdrop-filter: blur(2px);
+  animation: fadeUp 280ms ease;
 }
 
 .hero-header {
@@ -157,6 +189,11 @@
   --border-radius: 999px;
   width: 38px;
   height: 38px;
+  transition: transform 180ms ease;
+}
+
+.add-btn:hover {
+  transform: rotate(90deg) scale(1.05);
 }
 
 .chip-row {
@@ -181,6 +218,7 @@
 
 .task-section {
   margin-bottom: 1rem;
+  animation: fadeUp 360ms ease;
 }
 
 .section-head {
@@ -210,6 +248,7 @@
   border-radius: 24px;
   padding: 0.85rem;
   box-shadow: 0 8px 20px rgba(12, 31, 61, 0.08);
+  animation: popIn 220ms ease;
 }
 
 .modal-head {
@@ -279,6 +318,15 @@
   --label-color: #2b64df;
   --background: #ffffff;
   color: #1f2f4a;
+  transition:
+    transform 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.modal-input.ion-focused,
+.modal-select.ion-focused {
+  transform: translateY(-1px);
+  box-shadow: 0 0 0 3px rgba(59, 111, 241, 0.12);
 }
 
 .modal-input ion-icon,
@@ -321,6 +369,11 @@
   --border-radius: 14px;
   height: 42px;
   font-weight: 700;
+  transition: transform 160ms ease;
+}
+
+.primary-cta:hover {
+  transform: translateY(-1px);
 }
 
 .primary-cta.button-disabled {
@@ -336,6 +389,11 @@
   height: 42px;
   font-weight: 700;
   margin-top: 0.45rem;
+  transition: transform 160ms ease;
+}
+
+.secondary-cta:hover {
+  transform: translateY(-1px);
 }
 
 .create-modal {
@@ -353,4 +411,68 @@
   background: transparent;
   box-shadow: none;
   border: 0;
+}
+
+.progress-shell {
+  margin-top: 0.85rem;
+  padding: 0.62rem 0.7rem;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.68);
+  border: 1px solid rgba(18, 63, 86, 0.1);
+}
+
+.progress-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.4rem;
+  color: #0f3a52;
+  font-size: 0.86rem;
+}
+
+.progress-head strong {
+  color: #2f69e9;
+  font-size: 0.92rem;
+}
+
+.progress-shell ion-progress-bar {
+  --background: rgba(83, 114, 171, 0.22);
+  --progress-background: linear-gradient(90deg, #2d67e5, #4e8cff);
+  height: 9px;
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulseGlow {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
 }
