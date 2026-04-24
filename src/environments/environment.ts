@@ -6,13 +6,13 @@
 export const environment = {
   production: false,
   firebase: {
-    apiKey: 'TU_API_KEY',
-    authDomain: 'tu-proyecto.firebaseapp.com',
-    projectId: 'tu-proyecto',
-    storageBucket: 'tu-proyecto.appspot.com',
-    messagingSenderId: '000000000000',
-    appId: '1:000000000000:web:xxxxxxxx',
-    measurementId: 'G-XXXXXXXXXX',
+    apiKey: 'AIzaSyCz-rr8M-Nb2UCFodx9hJA-1F6_IGd-yYE',
+    authDomain: 'pruebatecnica-dc027.firebaseapp.com',
+    projectId: 'pruebatecnica-dc027',
+    storageBucket: 'pruebatecnica-dc027.firebasestorage.app',
+    messagingSenderId: '799086714624',
+    appId: '1:799086714624:web:b283f1af4c57e948ea1de5',
+    measurementId: 'G-D83EW9ZNCZ',
   },
   remoteConfigDefaults: {
     feature_todo_categories: 'true',
