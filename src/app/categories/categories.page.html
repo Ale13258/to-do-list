@@ -1,0 +1,62 @@
+<ion-header>
+  <ion-toolbar class="top-toolbar">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home" />
+    </ion-buttons>
+    <ion-title>Categorías</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="categories-content ion-padding">
+  <section class="hero card">
+    <h2 class="title">Vista de categorías</h2>
+    <p class="hint">Crea, edita o elimina categorías y revisa cuántas tareas tiene cada una.</p>
+    <ion-button size="small" (click)="createCategory()">Crear categoría</ion-button>
+  </section>
+
+  <section class="card">
+    <div class="row-between">
+      <h3 class="subtitle">Listado</h3>
+    </div>
+    <p class="hint">Al eliminar una categoría, sus tareas pasan a General automáticamente.</p>
+
+    <ion-list lines="none" class="category-list">
+      @for (category of todo.categories(); track category.id) {
+        <ion-item class="category-item">
+          <ion-label class="category-label">
+            <h3>{{ category.name }}</h3>
+            @if (category.id === 'general') {
+              <p>Categoría por defecto</p>
+            }
+          </ion-label>
+          <div class="category-actions" slot="end">
+            <ion-badge color="tertiary" class="count-badge">
+              {{ taskCount(category.id) }} tareas
+            </ion-badge>
+            @if (category.id !== 'general') {
+              <ion-button
+                fill="clear"
+                size="small"
+                class="edit-btn"
+                (click)="renameCategory(category.id, category.name)"
+              >
+                Editar
+              </ion-button>
+              <ion-button
+                fill="clear"
+                color="danger"
+                size="small"
+                class="remove-btn"
+                (click)="removeCategory(category.id, category.name)"
+              >
+                Eliminar
+              </ion-button>
+            } @else {
+              <ion-note color="medium">Protegida</ion-note>
+            }
+          </div>
+        </ion-item>
+      }
+    </ion-list>
+  </section>
+</ion-content>

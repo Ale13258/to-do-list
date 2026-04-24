@@ -1,0 +1,227 @@
+<ion-header [translucent]="true">
+  <ion-toolbar class="top-toolbar">
+    <ion-title>To-do List</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="home-content ion-padding">
+  @if (!flags.remoteConfigReady()) {
+    <div class="state-wrap">
+      <ion-spinner name="crescent" aria-label="Cargando configuración" />
+      <p class="state-text">Sincronizando Remote Config…</p>
+    </div>
+  } @else {
+    <section class="hero-shell">
+      <div class="hero-header">
+        <div class="avatar">H</div>
+        <div>
+          <h2>Hola</h2>
+          <p>{{ todo.pendingCount() }} pendientes</p>
+        </div>
+        <ion-button fill="solid" class="add-btn" (click)="openCreateTaskModal()">
+          <ion-icon slot="icon-only" name="add" />
+        </ion-button>
+      </div>
+
+      @if (flags.categoriesEnabled()) {
+        <div class="filter-card">
+          <ion-item lines="none" class="filter-row">
+            <ion-label position="stacked">Filtrar por categoría</ion-label>
+            <ion-select
+              class="full-select"
+              interface="popover"
+              [interfaceOptions]="categorySelectOptions"
+              [value]="todo.categoryFilter()"
+              (ionChange)="onFilterChange($event)"
+            >
+              <ion-select-option value="all">Todas</ion-select-option>
+              @for (c of todo.filterOptions(); track c.id) {
+                <ion-select-option [value]="c.id">{{ c.name }}</ion-select-option>
+              }
+            </ion-select>
+          </ion-item>
+        </div>
+      }
+    </section>
+
+    @if (pendingTasks().length > 0) {
+      <section class="task-section">
+        <div class="section-head">
+          <h3>Por hacer</h3>
+          <ion-badge color="light">{{ pendingTasks().length }}</ion-badge>
+        </div>
+        <section class="tasks-grid">
+          @for (item of pendingTasks(); track trackById($index, item)) {
+            <article class="task-card">
+              <div class="task-top">
+                <ion-checkbox
+                  [checked]="item.completed"
+                  (ionChange)="onToggle(item)"
+                  [ariaLabel]="'Completar ' + item.title"
+                />
+                <div class="task-main">
+                  <h3>{{ item.title }}</h3>
+                  @if (flags.categoriesEnabled()) {
+                    <ion-badge color="primary" class="meta-badge">
+                      {{ categoryName(item.categoryId) }}
+                    </ion-badge>
+                  }
+                </div>
+                <ion-button
+                  fill="clear"
+                  color="danger"
+                  size="small"
+                  class="remove-btn"
+                  (click)="onRemove(item)"
+                >
+                  <ion-icon slot="icon-only" name="trash-outline" />
+                </ion-button>
+              </div>
+
+              @if (flags.categoriesEnabled()) {
+                <ion-select
+                  class="task-category-select"
+                  interface="popover"
+                  [interfaceOptions]="categorySelectOptions"
+                  label="Categoría"
+                  labelPlacement="stacked"
+                  fill="outline"
+                  [value]="item.categoryId"
+                  (ionChange)="onTodoCategoryChange(item, $event)"
+                >
+                  @for (c of todo.categories(); track c.id) {
+                    <ion-select-option [value]="c.id">{{ c.name }}</ion-select-option>
+                  }
+                </ion-select>
+              }
+            </article>
+          }
+        </section>
+      </section>
+    }
+
+    @if (completedTasks().length > 0) {
+      <section class="task-section completed-section">
+        <div class="section-head">
+          <h3>Completadas</h3>
+          <ion-badge color="light">{{ completedTasks().length }}</ion-badge>
+        </div>
+        <section class="tasks-grid">
+          @for (item of completedTasks(); track trackById($index, item)) {
+            <article class="task-card completed">
+              <div class="task-top">
+                <ion-checkbox
+                  [checked]="item.completed"
+                  (ionChange)="onToggle(item)"
+                  [ariaLabel]="'Completar ' + item.title"
+                />
+                <div class="task-main">
+                  <h3>{{ item.title }}</h3>
+                  @if (flags.categoriesEnabled()) {
+                    <ion-badge color="primary" class="meta-badge">
+                      {{ categoryName(item.categoryId) }}
+                    </ion-badge>
+                  }
+                </div>
+                <ion-button
+                  fill="clear"
+                  color="danger"
+                  size="small"
+                  class="remove-btn"
+                  (click)="onRemove(item)"
+                >
+                  <ion-icon slot="icon-only" name="trash-outline" />
+                </ion-button>
+              </div>
+            </article>
+          }
+        </section>
+      </section>
+    }
+
+    @if (todo.filteredTodos().length === 0) {
+      <p class="empty-hint">No hay tareas para este filtro.</p>
+    }
+  }
+
+  <ion-modal class="create-modal" [isOpen]="createModalOpen" (didDismiss)="onCreateTaskDidDismiss()">
+    <ng-template>
+      <ion-content class="ion-padding modal-bg">
+        <section class="modal-shell">
+          <div class="modal-head">
+            <div class="modal-head-left">
+              <span class="modal-icon-wrap">
+                <ion-icon name="bag-add-outline" />
+              </span>
+              <h2>Nueva tarea</h2>
+            </div>
+            <ion-button fill="clear" class="close-btn" (click)="closeCreateTaskModal()">
+              <ion-icon slot="icon-only" name="close-outline" />
+            </ion-button>
+          </div>
+
+          <div class="field-block">
+            <label>Título</label>
+            <ion-input
+              class="modal-input"
+              [(ngModel)]="newTitle"
+              fill="outline"
+              placeholder="Qué hay que hacer"
+              (keyup.enter)="addTodo()"
+            >
+              <ion-icon slot="start" name="create-outline" />
+            </ion-input>
+            <small>Escribe un título para tu tarea</small>
+          </div>
+
+          @if (flags.categoriesEnabled()) {
+            <div class="field-block">
+              <label>Categoría</label>
+              <ion-select
+                class="modal-select"
+                [(ngModel)]="newCategoryId"
+                interface="popover"
+                [interfaceOptions]="categorySelectOptions"
+                fill="outline"
+              >
+                <ion-icon slot="start" name="pricetag-outline" />
+                @for (c of todo.categories(); track c.id) {
+                  <ion-select-option [value]="c.id">{{ c.name }}</ion-select-option>
+                }
+              </ion-select>
+            </div>
+          }
+
+          <div class="tip-box">
+            <span class="tip-icon">
+              <ion-icon name="bulb-outline" />
+            </span>
+            <div>
+              <strong>Consejo</strong>
+              <p>Puedes gestionar tus categorías desde el panel de categorías.</p>
+            </div>
+          </div>
+
+          <ion-button
+            class="primary-cta"
+            expand="block"
+            (click)="addTodo()"
+            [disabled]="!newTitle.trim()"
+          >
+            <ion-icon slot="start" name="checkmark-circle-outline" />
+            Crear tarea
+          </ion-button>
+          <ion-button
+            class="secondary-cta"
+            fill="outline"
+            expand="block"
+            (click)="openCategoriesFromModal()"
+          >
+            <ion-icon slot="start" name="folder-open-outline" />
+            Gestionar categorías
+          </ion-button>
+        </section>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>

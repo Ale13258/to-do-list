@@ -1,0 +1,141 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+
+/* Optional CSS utils that can be commented out */
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+/**
+ * Ionic Dark Mode
+ * -----------------------------------------------------
+ * For more info, please see:
+ * https://ionicframework.com/docs/theming/dark-mode
+ */
+
+/* @import "@ionic/angular/css/palettes/dark.always.css"; */
+/* @import "@ionic/angular/css/palettes/dark.class.css"; */
+/* @import "@ionic/angular/css/palettes/dark.system.css"; */
+
+.category-alert {
+  --backdrop-opacity: 0.08;
+  color-scheme: light;
+}
+
+.category-alert .alert-wrapper {
+  background: #f7f9ff;
+  border-radius: 18px;
+  box-shadow: 0 10px 24px rgba(36, 87, 112, 0.15);
+  padding: 0.35rem 0.35rem 0.45rem;
+}
+
+.category-alert .alert-head {
+  padding-bottom: 0.35rem;
+}
+
+.category-alert .alert-title {
+  color: #12284c;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.category-alert .alert-input-group {
+  padding: 0.55rem 0.4rem 0.15rem;
+}
+
+.category-alert .alert-input {
+  border-radius: 12px;
+  border: 1px solid #9cb7ea;
+  color: #111827 !important;
+  background: #ffffff !important;
+  padding: 0.8rem 0.95rem !important;
+  font-size: 1.05rem;
+  -webkit-text-fill-color: #111827 !important;
+  caret-color: #111827 !important;
+}
+
+.category-alert .alert-input.category-name-input,
+.category-alert .alert-input-wrapper .alert-input.category-name-input {
+  --background: #ffffff;
+  background: #ffffff !important;
+}
+
+.category-alert .alert-input.category-name-input.sc-ion-alert-md,
+.category-alert .alert-input.category-name-input.sc-ion-alert-ios,
+.category-alert .alert-input.sc-ion-alert-md,
+.category-alert .alert-input.sc-ion-alert-ios {
+  background: #ffffff !important;
+  color: #111827 !important;
+  -webkit-text-fill-color: #111827 !important;
+  caret-color: #111827 !important;
+}
+
+.category-alert .alert-input:focus,
+.category-alert .alert-input:active {
+  color: #111827 !important;
+  background: #ffffff !important;
+  -webkit-text-fill-color: #111827 !important;
+  box-shadow: 0 0 0 2px rgba(59, 111, 241, 0.2);
+  border-color: #3b6ff1;
+}
+
+.category-alert .alert-input::placeholder {
+  color: #6b7280;
+}
+
+.category-alert .alert-input-wrapper {
+  --background: #ffffff;
+  background: #ffffff !important;
+  padding: 0.2rem 0.1rem 0.35rem;
+}
+
+.category-alert input.alert-input {
+  --background: #ffffff;
+  background: #ffffff !important;
+  color: #111827 !important;
+  -webkit-text-fill-color: #111827 !important;
+}
+
+.category-alert .alert-button-group {
+  padding: 0.35rem 0.65rem 0.65rem;
+}
+
+.category-alert .alert-button {
+  color: #2f69e9;
+  font-weight: 700;
+}
+
+.todo-select-popover {
+  --background: #f7f9ff;
+  --color: #15314d;
+  color-scheme: light;
+}
+
+.todo-select-popover ion-item {
+  --background: #f7f9ff;
+  --color: #15314d;
+}
+
+.todo-select-popover ion-item.item-radio-checked {
+  --background: #e6efff;
+  --color: #123f56;
+}

@@ -1,0 +1,101 @@
+.categories-content {
+  --background: linear-gradient(180deg, #b6e8fb 0%, #9edbf4 45%, #8bd1f0 100%);
+}
+
+.top-toolbar {
+  --background: rgba(207, 235, 247, 0.94);
+  --border-color: rgba(18, 63, 86, 0.12);
+  color: #0e3a4b;
+  backdrop-filter: blur(4px);
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.36);
+  border-radius: 20px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 8px 20px rgba(36, 87, 112, 0.12);
+  backdrop-filter: blur(2px);
+}
+
+.title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0b3a4f;
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #0c3b50;
+}
+
+.row-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.hint {
+  color: #25596d;
+  font-size: 0.92rem;
+  margin: 0.35rem 0 0.85rem;
+}
+
+.hero {
+  display: grid;
+  gap: 0.45rem;
+  background: rgba(255, 255, 255, 0.42);
+}
+
+.category-item {
+  --padding-top: 0.6rem;
+  --padding-bottom: 0.6rem;
+  --inner-padding-end: 0.5rem;
+  --inner-padding-start: 0.25rem;
+  --border-radius: 12px;
+  --background: #ffffff;
+  border: 1px solid rgba(75, 115, 177, 0.16);
+  border-radius: 14px;
+  margin-bottom: 0.5rem;
+  box-shadow: 0 6px 16px rgba(36, 87, 112, 0.08);
+}
+
+.count-badge {
+  margin-right: 0.3rem;
+  white-space: nowrap;
+}
+
+.category-list {
+  background: transparent;
+  padding: 0;
+}
+
+.category-label h3 {
+  margin: 0;
+  color: #15314d;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.category-label p {
+  margin: 0.2rem 0 0;
+  color: #627997;
+  font-size: 0.82rem;
+}
+
+.category-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.1rem;
+}
+
+.edit-btn,
+.remove-btn {
+  --padding-start: 0.35rem;
+  --padding-end: 0.35rem;
+  font-weight: 600;
+}
